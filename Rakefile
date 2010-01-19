@@ -5,13 +5,17 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "droplet"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{RESTful file uploaded compatible with paperclip for remote file stores.}
+    gem.description = %Q{Simple file store with XML front end and extended attribute data.}
     gem.email = "adam@warptube.com"
     gem.homepage = "http://github.com/adamelliot/droplet"
     gem.authors = ["Adam Elliot"]
-    gem.add_development_dependency "spicycode-micronaut", ">= 0"
-    gem.add_development_dependency "yard", ">= 0"
+    gem.add_dependency "sinatra", ">= 0.9.4"
+    gem.add_dependency "datamapper", ">= 0.10.1"
+    gem.add_development_dependency "rack-test", ">= 0.5.0"
+    gem.add_development_dependency "micronaut", ">= 0.3.0"
+    gem.add_development_dependency "do_sqlite3", ">= 0.9.0"
+    gem.add_development_dependency "yard", ">= 0.5.3"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
@@ -20,7 +24,7 @@ rescue LoadError
 end
 
 require 'micronaut/rake_task'
-Micronaut::RakeTask.new(examples) do |examples|
+Micronaut::RakeTask.new(:examples) do |examples|
   examples.pattern = 'examples/**/*_example.rb'
   examples.ruby_opts << '-Ilib -Iexamples'
 end
