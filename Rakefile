@@ -53,7 +53,7 @@ end
 namespace :db do
   desc "Auto migrates the data model"
   task :migrate do
-    include KinsmenPool::Models
+    include Droplet::Models
 
     DataMapper.auto_migrate!
   end

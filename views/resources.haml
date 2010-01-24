@@ -9,18 +9,7 @@
     %meta{:name => "description", :content => "iCalendar format for Kinsmen pool schedules" }  
   %body
 
-    #upload
-      I'm the upload container.
+    - @resources.each do |resource|
+      %div= resource.file.inspect
 
     .clear
-
-    #footer
-      %a{:href => 'http://github.com/adamelliot/droplet'} fork me!
-      |
-      %a{:href => 'http://adamelliot.com/'} adamelliot.com
-
-    
-      %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.js"}
-      %script{:src => "javascripts/pure_packed.js"}
-      %script{:src => "javascripts/application.js"}
-    

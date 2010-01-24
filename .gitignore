@@ -19,3 +19,5 @@ rdoc
 pkg
 
 ## PROJECT::SPECIFIC
+*.sqlite3
+public/system/*
