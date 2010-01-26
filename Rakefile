@@ -52,7 +52,7 @@ end
 
 namespace :db do
   desc "Auto migrates the data model"
-  task :migrate do
+  task :auto_migrate do
     include Droplet::Models
 
     DataMapper.auto_migrate!
