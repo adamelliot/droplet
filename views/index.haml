@@ -1,28 +1,16 @@
-!!!
-%html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
-  %head
-    %title Droplet
-    %link{:rel => 'stylesheet', :href => '/application.css', :media => 'screen,projection'}
+#upload
+  %form{:action => '/resources', :enctype => 'multipart/form-data', :method => 'POST'}
+    %input{:type => 'file', :name => 'file'}
+    %input{:type => 'submit'}
 
-    %meta{:"http-equiv" => "Content-Type", :content => "text/html; charset=utf-8" } 
-    %meta{:name => "keywords", :content => "edmonton, pool, recreation" } 
-    %meta{:name => "description", :content => "iCalendar format for Kinsmen pool schedules" }  
-  %body
+.clear
 
-    #upload
-      %form{:action => '/resources', :enctype => 'multipart/form-data', :method => 'POST'}
-        %input{:type => 'file', :name => 'file'}
-        %input{:type => 'submit'}
+#footer
+  %a{:href => 'http://github.com/adamelliot/droplet'} fork me!
+  |
+  %a{:href => 'http://adamelliot.com/'} adamelliot.com
 
-    .clear
 
-    #footer
-      %a{:href => 'http://github.com/adamelliot/droplet'} fork me!
-      |
-      %a{:href => 'http://adamelliot.com/'} adamelliot.com
-
-    
-      %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.js"}
-      %script{:src => "javascripts/pure_packed.js"}
-      %script{:src => "javascripts/application.js"}
-    
+  %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.js"}
+  %script{:src => "javascripts/pure_packed.js"}
+  %script{:src => "javascripts/application.js"}
