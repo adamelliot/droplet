@@ -1,16 +1,6 @@
 #upload
-  %form{:action => '/resources', :enctype => 'multipart/form-data', :method => 'POST'}
+  %form{:id => 'upload_form', :action => '/resources', :enctype => 'multipart/form-data', :method => 'POST', :target => 'upload_frame'}
     %input{:type => 'file', :name => 'file'}
     %input{:type => 'submit'}
 
 .clear
-
-#footer
-  %a{:href => 'http://github.com/adamelliot/droplet'} fork me!
-  |
-  %a{:href => 'http://adamelliot.com/'} adamelliot.com
-
-
-  %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.js"}
-  %script{:src => "javascripts/pure_packed.js"}
-  %script{:src => "javascripts/application.js"}

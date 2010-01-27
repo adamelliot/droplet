@@ -25,12 +25,32 @@ describe Droplet::Server do
 
       Droplet::Models::Resource.all.count.should == 1
     end
+
+    it "reports an error if no file is sent" do
+      post '/resources'
+      last_response.status.should == 409
+    end
   end
 
   describe "GET to /resources" do
     it "returns a list of resouces" do
       get '/resources'
       last_response.should be_ok
+    end
+    
+    it "returns json when queried with that format (js)" do
+      get '/resources.js'
+      last_response.body.should include('[', ']')
+    end
+
+    it "returns xml when queried with that format (xml)" do
+      get '/resources.xml'
+      last_response.body.should include('<', '>')
+    end
+    
+    it "returns 404 when an invalid format is specified" do
+      get "/resources.bad"
+      last_response.status.should == 404
     end
   end
 

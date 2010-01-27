@@ -1,6 +1,7 @@
 require 'dm-core'
 require 'dm-types'
 require 'dm-paperclip'
+require 'nokogiri'
 require 'dm-serializer'
 require 'date'
 require 'active_support'

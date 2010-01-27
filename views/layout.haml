@@ -8,4 +8,13 @@
     %meta{:name => "keywords", :content => "edmonton, pool, recreation" } 
     %meta{:name => "description", :content => "iCalendar format for Kinsmen pool schedules" }  
   %body
-  = yield
+    = yield
+
+    #footer
+      %a{:href => 'http://github.com/adamelliot/droplet'} fork me!
+      |
+      %a{:href => 'http://adamelliot.com/'} adamelliot.com
+
+    %script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.js"}
+    %script{:src => "javascripts/pure_packed.js"}
+    %script{:src => "javascripts/application.js"}

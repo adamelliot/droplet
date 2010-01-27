@@ -17,15 +17,16 @@ module Droplet
     end
 
     def self.get_with_format(path, &block)
-      get %r{#{path}(\.(xml|js(on)?|html?))?} do
+      get %r{#{path}(\.([^\/\s]*))?} do
         wants = {}
         format = params[:captures] && params[:captures][1].to_sym || :html
         def wants.method_missing(type, *args, &handler)
-          Sinatra::Base.send(:fail, "Unknown media type for respond_to: #{type}\nTry registering the extension with a mime type") if false
           self[type] = handler
         end
 
         block.bind(self).call(wants)
+        halt 404 if wants[format].nil?
+
         wants[format].bind(self).call
       end
     end
@@ -44,7 +45,9 @@ module Droplet
     end
 
     post '/resources' do
-      halt 409, "File doesn't appeart to have any content." unless params[:file][:tempfile].size > 0
+      if params[:file].nil? || params[:file][:tempfile].nil? || params[:file][:tempfile].size == 0
+        halt 409, "File doesn't appeart to have any content."
+      end
       resource = Droplet::Models::Resource.new(:file => make_paperclip_mash(params[:file]))
       halt 409, "Something went wrong..." unless resource.save
     end
@@ -59,7 +62,7 @@ module Droplet
     not_found do
       "Not sure what you're looking for, but I don't think it's here..."
     end
-    
+
     private
       # Creates a Mash that has the props paperclip expects
       def make_paperclip_mash(file_hash)
