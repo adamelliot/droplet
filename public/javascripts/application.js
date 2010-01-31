@@ -18,8 +18,6 @@ $(function() {
       var resources = $("#resources");
       
       for (var i = 0; i < data.length; i++) {
-        // data[i].file_content_type
-
         var d = new Date(data[i].updated_at);
 
         var resource = $(resourceTemplate({
@@ -27,12 +25,10 @@ $(function() {
           name: data[i].name.ellipis(30),
           size: Math.floor(data[i].size / 1024) + " kb",
           date: d.toDateString()
-      }));
+        }));
         
         resources.append(resource);
       }
-      
-      console.log(data.length);
     });
   };
   
