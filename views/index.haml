@@ -1,6 +1,28 @@
-#upload
-  %form{:id => 'upload_form', :action => '/resources', :enctype => 'multipart/form-data', :method => 'POST', :target => 'upload_frame'}
-    %input{:type => 'file', :name => 'file'}
-    %input{:type => 'submit'}
+#tab_bar
+  .tab.all.selected
+    All
 
-.clear
+#upload
+  %h2 File Upload
+  %form{:id => 'upload_form', :action => '/resources', :enctype => 'multipart/form-data', :method => 'POST'}
+    %input{:type => 'file', :name => 'file'}
+    %input{:type => 'submit', :value => 'Upload'}
+
+#resources
+
+#footer
+  %a.left#fork{:href => 'http://github.com/adamelliot/droplet'} Fork me!
+  %a.right#copyright{:href => 'http://adamelliot.com/'} Copyright © 2010 Adam Elliot
+  #pending
+    Pending Transfers:
+    %span#transfer_count 0
+
+#templates
+  %a.resource{:href => "\#", :target => '_blank'}
+    .preview
+      %img{:src => '/images/dice-small.png'}
+    .content
+      .name
+      .size
+      .date
+

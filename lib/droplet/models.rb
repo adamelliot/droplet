@@ -20,6 +20,24 @@ module Droplet
       has_attached_file :file,
                         :url => "/system/:attachment/:id/:style/:basename.:extension",
                         :path => "#{APP_ROOT}/public/system/:attachment/:id/:style/:basename.:extension"
+
+      def name
+        file_file_name
+      end
+      
+      def path
+        file.url
+      end
+      
+      def size
+        # file.size is missing in the latest gem
+        file_file_size
+      end
+
+      def updated_at
+        file_updated_at
+      end
+
     end
   end
 end

@@ -38,10 +38,10 @@ module Droplet
     # Resource Routes
     get_with_format "/resources" do |wants|
       @resources = Droplet::Models::Resource.all
+      params = {:only => [:slug], :methods => [:name, :path, :size, :updated_at]}
 
-      wants.html { haml :resources }
-      wants.js   { @resources.to_json }
-      wants.xml  { @resources.to_xml }
+      wants.js   { @resources.to_json(params) }
+      wants.xml  { @resources.to_xml(params) }
     end
 
     post '/resources' do

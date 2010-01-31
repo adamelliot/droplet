@@ -1,5 +1,166 @@
+=rounded(!radius = 6px)
+  :-webkit-border-radius = !radius
+  :-moz-border-radius = !radius
+
+=box-shadow(!distance = 2px, !radius = 20px)
+  :-webkit-box-shadow = 0px !distance !radius rgba(0, 0, 0, 0.6)
+  :-moz-box-shadow = 0px !distance !radius rgba(0, 0, 0, 0.6)
+
+=bold-sized-font(!size = 100%)
+  :font-weight bold
+  :font-size = !size
+
+=background-gradient(!from = #eee, !to = #ccc)
+  :background = "-webkit-gradient(""linear", 0% 0%, 0% 100%, from(!from), to(!to)")"
+  :background = "-moz-linear-gradient(" 0, !from, !to")"
+
+=bar(!height)
+  +dark-bezeled-text
+  font-size: 10pt
+  :position fixed
+  :left 0
+  :right 0
+  :height = !height
+
+=top-bar(!height = 24px)
+  +bar(!height)
+  :top 0
+
+=bottom-bar(!height = 24px)
+  +bar(!height)
+  :bottom 0
+
+=box-bezel(!color = rgba(0, 0, 0, 0.4))
+  :border = 1px "solid" !color
+  :-webkit-box-shadow = 0px 1px 1px rgba(255, 255, 255, 0.4)
+  :-moz-box-shadow = 0px 1px 1px rgba(255, 255, 255, 0.4)
+
+=light-shadowed-text
+  :text-shadow 0px -1px 2px rgba(0, 0, 0, 1.0)
+  :color #fff
+
+=light-bezeled-text(!color = #fff, !shadow = #555)
+  :text-shadow = 0px 1px 0px !shadow
+  :color = !color
+
+=dark-bezeled-text(!color = #333, !shadow = #fff)
+  :text-shadow = 0px 1px 0px !shadow
+  :color = !color
+  
+=bar-text
+  +rounded(10px)
+  text-decoration: underline
+  padding: 4px 7px
+
+=bar-text-hover
+  +light-bezeled-text
+  text-decoration: none
+  background: #9aa7b6
+
+=rounded-bottom(!radius = 14px)
+  :-webkit-border-bottom-left-radius = !radius
+  :-webkit-border-bottom-right-radius = !radius
+  :-moz-border-bottom-left-radius = !radius
+  :-moz-border-bottom-right-radius = !radius
+
+
 body
+  background-image: url(/images/background.png)
+  background-attachment: fixed
   font-family: Helvetica
+  padding: 0
+  margin: 0
+
+a
+  text-decoration: none
+
+#templates
+  display: none
+
+#tab_bar
+  +box-shadow(2px)
+  +top-bar(24px)
+  +background-gradient
+  z-index: 2
+  border-bottom: 1px solid #444
+  padding: 5px
+
+  .tab
+    +bar-text
+    display: inline-block
+    padding: 4px 6px
+    cursor: pointer
+    
+    &.selected
+      +box-bezel
+      +bar-text-hover
+    
+    &:hover
+      +bar-text-hover
+
+#upload
+  +rounded-bottom
+  +box-shadow
+  z-index: 1
+  position: fixed
+  color: white
+  top: 34px
+  right: 30px
+  width: 180px
+  padding: 16px
+  background-color: rgba(0, 0, 0, 0.7)
+  h2
+    margin: 2px 6px
+  input[type=file]
+    color: white
+    padding: 6px 2px
+  input[type=submit]
+    float: right
+
+#resources
+  margin: 40px 10px
+
+  .resource
+    +rounded(12px)
+    background-color: rgba(0, 0, 0, 0.6)
+    font-size: 11pt
+    color: #ddd
+    display: inline-block
+    min-width: 340px
+    margin: 12px 12px 12px 12px
+    padding: 6px
+    .preview
+      padding: 6px
+      float: left
+    .content
+      padding: 8px
+    &:hover
+      +box-shadow
+      +background-gradient
+      +dark-bezeled-text
+
+#footer
+  +bottom-bar
+  +background-gradient
+  +box-shadow(-1px)
+  padding: 4px
+  border-top: 1px solid #444
+  text-align: center
+  a
+    +bar-text
+    color: #333
+    &:hover
+      +bar-text-hover
+
+#pending
+  display: none
+  margin: 4px 190px
+
+.left
+  float: left
+
+.right
+  float: right
 
 .clear
   clear: both
