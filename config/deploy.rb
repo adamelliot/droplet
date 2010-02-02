@@ -5,6 +5,8 @@ set :repository, "git@github.com:adamelliot/droplet.git"
 set :user, 'deploy'
 set :scm, 'git'
 
+set :server_name, "#{application}.warptube.com"
+
 set :branch, "origin/master"
 
 set :deploy_via, :remote_cache
@@ -15,19 +17,30 @@ set :use_sudo, true
 
 role :web, "icarus.warptube.com"
 role :app, "icarus.warptube.com"
-role :db,  "icarus.warptube.com", :primary => true # This is where Rails migrations will run
+role :db,  "icarus.warptube.com", :primary => true
 
-# If you are using Passenger mod_rails uncomment this:
-# if you're still using the script/reapear helper you will need
-# these http://github.com/rails/irs_process_scripts
+after "deploy:setup", "config:set_permissions"
+after "deploy:setup", "config:create_config_yaml"
+after "deploy:setup", "db:auto_migrate"
+after "deploy:setup", "apache:create_vhost"
+after "deploy:setup", "apache:enable_site"
+after "deploy:setup", "apache:reload_apache"
+after "deploy:setup", "deploy"
+after "deploy", "deploy:restart"
 
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
+after "deploy:update_code", "config:copy_shared_configurations"
+
+namespace :deploy do
+  [:start, :restart].each do |t|
+    desc "Restarting mod_rails with restart.txt"
+    task t, :roles => :app, :except => {:no_release => true} do
+      run "touch #{current_path}/tmp/restart.txt"
+    end
+  end
+
+  desc "Stop task is a no-op with mod_rails"
+  task :stop, :roles => :app do ; end
+end
 
 namespace :apache do
   desc "reloads apache configuration to make site active"
@@ -49,12 +62,12 @@ namespace :apache do
   task :create_vhost do
     vhost_configuration = <<-VHOST
 <VirtualHost *:80>
-  ServerName #{application}
+  ServerName #{server_name}
   #{"ServerAlias #{server_alias}" if exists?(:server_alias)}
-  DocumentRoot "#{base_path}/#{application}/current/public"
+  DocumentRoot "#{deploy_to}/current/public"
   RailsEnv production
   RailsAllowModRewrite off
-  <directory "#{base_path}/#{application}/current/public">
+  <directory "#{deploy_to}/current/public">
     Order allow,deny
     Allow from all
   </directory>
@@ -67,11 +80,37 @@ VHOST
   end
 end
 
-namespace :init do
+namespace :db do
+  desc "Runs the automigration for datamapper (dumps data)"
+  task :auto_migrate do
+    run("cd #{current_path}; rake db:migrate RAILS_ENV=#{rails_env}")
+  end
+end
+
+namespace :config do
   desc "setting proper permissions for deploy user"
   task :set_permissions do
-    sudo "chmod -R g+rw #{base_path}/#{application}"
-    sudo "chown -R #{user}:admin #{base_path}/#{application}"
+    sudo "chmod -R g+rw #{deploy_to}"
+    sudo "chown -R #{user}:admin #{deploy_to}"
   end
 
+  desc "copy shared configurations to current"
+  task :copy_shared_configurations, :roles => [:app] do
+    %w[config.yml db.sqlite3].each do |f|
+      run "ln -nsf #{shared_path}/config/#{f} #{release_path}/config/#{f}"
+    end
+  end
+
+  desc "Update the facebooker.yml"
+  task :create_config_yaml do
+    set(:password) do
+      Capistrano::CLI.password_prompt("Droplet upload password (username is 'droplet'): ")
+    end unless exists?(:password)
+    
+    config = <<-CONFIG_YML
+password: #{password}
+CONFIG_YML
+    run "mkdir -p #{shared_path}/config"
+    put config, "#{shared_path}/config/config.yml"
+  end
 end

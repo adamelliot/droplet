@@ -6,7 +6,7 @@ require 'dm-serializer'
 require 'date'
 require 'active_support'
 
-DataMapper::setup(:default, "sqlite3://#{APP_ROOT}/db.sqlite3")
+DataMapper::setup(:default, "sqlite3://#{APP_ROOT}/config/db.sqlite3")
 
 module Droplet
   module Models
