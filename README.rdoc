@@ -1,16 +1,6 @@
 = droplet
 
-Description goes here.
-
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+A simple Sinatra app that allows uploading of files via Paperclip, and shows them in a convient list. Mostly so I have somewhere to dump stuff, and to link stuff from my Heroku sites. Eventually it will have tagging support and directly support uploading with paperclip from other apps, but it's still pretty alpha. Uploading uses basic HTTP Auth.
 
 == Copyright
 

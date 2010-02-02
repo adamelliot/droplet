@@ -34,7 +34,6 @@ $(function() {
   
   var setupUploadForm = function() {
     var uploadFrameCount = 1;
-    
     var uploadForm = $("#upload_form");
     if (uploadForm.length < 1) return;
 

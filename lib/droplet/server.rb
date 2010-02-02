@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'haml'
 require 'sass'
 require 'active_support'
+require 'yaml'
 
 module Droplet
   class Server < Sinatra::Base
@@ -10,10 +11,33 @@ module Droplet
 
     configure do
       set :haml, {:format => :html5}
+      
+      # Load configuration (just stores password for now)
+      begin
+        data = YAML.load_file('config/config.yml')
+        ENV['password'] = data['password'] || 'astro'
+      rescue
+        ENV['password'] = 'astro'
+      end
     end
 
     configure :production do
       set :sass, {:style => :compact}
+    end
+    
+    helpers do
+      def protected!
+        unless authorized?
+          response['WWW-Authenticate'] = %(Basic realm="Droplet Upload HTTP Auth")
+          throw(:halt, [401, "Not authorized\n"])
+        end
+      end
+
+      def authorized?
+        @auth ||= Rack::Auth::Basic::Request.new(request.env)
+        @auth.provided? && @auth.basic? && @auth.credentials &&
+          @auth.credentials == ['droplet', ENV['password']]
+      end
     end
 
     def self.get_with_format(path, &block)
@@ -45,6 +69,7 @@ module Droplet
     end
 
     post '/resources' do
+      protected!
       if params[:file].nil? || params[:file][:tempfile].nil? || params[:file][:tempfile].size == 0
         halt 409, "File doesn't appeart to have any content."
       end
