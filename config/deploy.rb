@@ -81,7 +81,7 @@ VHOST
 end
 
 namespace :db do
-  desc "Runs the automigration for datamapper (dumps data)"
+  desc "Runs the auto migration for datamapper (dumps data)"
   task :auto_migrate do
     run("cd #{current_path}; rake db:migrate RAILS_ENV=#{rails_env}")
   end
@@ -99,6 +99,9 @@ namespace :config do
     %w[config.yml db.sqlite3].each do |f|
       run "ln -nsf #{shared_path}/config/#{f} #{release_path}/config/#{f}"
     end
+    
+    run "mkdir -p #{shared_path}/system"
+    run "ln -nsf #{shared_path}/system #{release_path}/public/system"
   end
 
   desc "Update the facebooker.yml"

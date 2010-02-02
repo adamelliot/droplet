@@ -21,3 +21,4 @@ pkg
 ## PROJECT::SPECIFIC
 *.sqlite3
 public/system/*
+config/config.yml
