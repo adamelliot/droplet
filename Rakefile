@@ -4,16 +4,26 @@ require 'rubygems'
 require 'rake'
 require 'droplet'
 
-require 'micronaut/rake_task'
-Micronaut::RakeTask.new(:examples) do |examples|
-  examples.pattern = 'examples/**/*_example.rb'
-  examples.ruby_opts << '-Ilib -Iexamples -rexamples/example_helper.rb'
-end
+begin
+  require 'micronaut/rake_task'
+  Micronaut::RakeTask.new(:examples) do |examples|
+    examples.pattern = 'examples/**/*_example.rb'
+    examples.ruby_opts << '-Ilib -Iexamples -rexamples/example_helper.rb'
+  end
 
-Micronaut::RakeTask.new(:rcov) do |examples|
-  examples.pattern = 'examples/**/*_example.rb'
-  examples.rcov_opts = %[--exclude "examples/*,gems/*,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
-  examples.rcov = true
+  Micronaut::RakeTask.new(:rcov) do |examples|
+    examples.pattern = 'examples/**/*_example.rb'
+    examples.rcov_opts = %[--exclude "examples/*,gems/*,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
+    examples.rcov = true
+  end
+rescue
+  task :examples do
+    abort "Micronaut is not available. In order to run reek, you must: sudo gem install micronaut"
+  end
+
+  task :rcov do
+    abort "Micronaut is not available. In order to run reek, you must: sudo gem install micronaut"
+  end
 end
 
 begin

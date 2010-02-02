@@ -7,7 +7,7 @@ set :scm, 'git'
 
 set :server_name, "#{application}.warptube.com"
 
-set :branch, "origin/master"
+#set :branch, "origin/master"
 
 set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
@@ -20,15 +20,17 @@ role :app, "icarus.warptube.com"
 role :db,  "icarus.warptube.com", :primary => true
 
 after "deploy:setup", "config:set_permissions"
+after "deploy:setup", "deploy"
+after "deploy:setup", "apache:create_vhost"
 after "deploy:setup", "config:create_config_yaml"
 after "deploy:setup", "db:auto_migrate"
-after "deploy:setup", "apache:create_vhost"
 after "deploy:setup", "apache:enable_site"
 after "deploy:setup", "apache:reload_apache"
-after "deploy:setup", "deploy"
+
 after "deploy", "deploy:restart"
 
 after "deploy:update_code", "config:copy_shared_configurations"
+after "config:create_config_yaml", "deploy:restart"
 
 namespace :deploy do
   [:start, :restart].each do |t|
@@ -71,11 +73,10 @@ namespace :apache do
     Order allow,deny
     Allow from all
   </directory>
-  ExpiresActive On
-  ExpiresDefault "access plus 30 days"
 </VirtualHost>
 VHOST
 
+    run "mkdir -p #{shared_path}/config"
     put vhost_configuration, "#{shared_path}/config/apache_site.conf"
   end
 end
@@ -83,7 +84,7 @@ end
 namespace :db do
   desc "Runs the auto migration for datamapper (dumps data)"
   task :auto_migrate do
-    run("cd #{current_path}; rake db:migrate RAILS_ENV=#{rails_env}")
+    run("cd #{current_path}; rake db:auto_migrate")
   end
 end
 
@@ -104,11 +105,11 @@ namespace :config do
     run "ln -nsf #{shared_path}/system #{release_path}/public/system"
   end
 
-  desc "Update the facebooker.yml"
+  desc "Update the config.yml"
   task :create_config_yaml do
-    set(:password) do
+    set(:auth_password) do
       Capistrano::CLI.password_prompt("Droplet upload password (username is 'droplet'): ")
-    end unless exists?(:password)
+    end unless exists?(:auth_password)
     
     config = <<-CONFIG_YML
 password: #{password}
