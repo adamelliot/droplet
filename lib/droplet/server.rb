@@ -61,6 +61,7 @@ module Droplet
 
     # Resource Routes
     get_with_format "/resources" do |wants|
+      protected!
       @resources = Droplet::Models::Resource.all
       params = {:only => [:slug], :methods => [:name, :path, :size, :updated_at]}
 
